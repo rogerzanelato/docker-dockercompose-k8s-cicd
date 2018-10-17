@@ -8,13 +8,13 @@ Resumo e lembretes sobre como utilizar o Docker.
 ## Criando Containers
 Com o código abaixo, criamos um novo container com a imagem nginx. Caso a mesma não se localize no computador, o Docker tentará instalá-la.
 ```shell
-	docker run nginx
+docker run nginx
 ```
 
 ### Flags
 - `-d`: Daemon (detach). Faz com que o Container execute em background. Sem essa flag o container é lançado no modo ativo, e teremos que permanecer com o terminal aberto.
 - `-it`: Iterativo. O container é criado e já somos direcionados ao bash do mesmo.
-- `-p`: Porta (publish list). "Publicamos" a porta de um container para o host, dessa forma, poderemos acessar o conteúdo do container para ela. Ex: -p 8080:80. Mapeamos para que a porta 8080 do container seja direcionada à porta 80 do nginx.
+- `-p`: Porta (publish list). "Publicamos" a porta de um container para o host, dessa forma, poderemos acessar o conteúdo do co'ntainer para ela. Ex: -p 8080:80. Mapeamos para que a porta 8080 do container seja direcionada à porta 80 do nginx.
 - `--name`: Nome do container. Ex: --name meu-container-top.
 - `--expose`:  Expõe uma porta do container. Ex: --expose=9000.
 
