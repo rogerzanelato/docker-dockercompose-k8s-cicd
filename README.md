@@ -26,9 +26,11 @@ docker run nginx
 - `-it`: Interativo. O container é criado e já somos direcionados ao bash do mesmo.
 - `-p`: Porta (publish list). "Publicamos" a porta de um container para o host, dessa forma, poderemos acessar o conteúdo do container para ela. Ex: -p 8080:80. Mapeamos para que a porta 8080 do container seja direcionada à porta 80 do nginx.
 - `-v`: Volume. Podemos criar um volume dentro do container e mapeá-lo para uma pasta em nosso host, podendo assim, facilmente executar o sistema em múltiplos ambientes diferentes. Ex: -v /var/www/html/testes:/usr/share/nginx/html.
+- `-e`: Variáveis de ambiente. Ex: -e MYSQL_ROOT_PASSWORD=root.
 - `--name`: Nome do container. Ex: --name meu-container-top.
 - `--expose`: Expõe uma porta do container. Ex: --expose=9000.
 - `--volumes-from`: Mapeamos o volume de um outro container neste que estamos criando. Ex: --volumes-from webserver06.
+- `--link`: Estabelecemos um link entre um ou mais container, indicando para isso, o nome do container e a imagem do mesmo. Ex: --link dbserver:mysql.
 
 Observação: Em produção trabalhamos sempre com o conceito de expor o conteúdo dentro do container através da exposição de alguma porta.
 
@@ -43,6 +45,7 @@ Isso é especialmente quando queremos instalar algum pacote rápido no container
 
 ### Flags
 - `-it`: Interativo. Com essa Flag podemos tornar o acesso interativo e, por exemplo, acessar o shell dentro do container. Exemplo: `docker exec -it webserver /bin/bash`.
+- `-u`: User. Usuário com que desejamos iniciar o bash. Ex: -u 0 (para iniciar como root).
 
 ## Criando uma imagem à partir de um container
 É muito comum que instalemos novos pacotes ou façamos atualizações em um container que está em execução, para podermos reaproveitar essas alterações, o Docker possuí um comando que permite converter as configurações de um container numa nova imagem.
