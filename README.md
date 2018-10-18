@@ -56,7 +56,7 @@ docker commit webserver nginxdefault:v1
 
 Com o cmando acima, criamos uma nova imagem à partir do que está em webserver, chamada de nginxdefault, com a tag v1. Para visualizar, podemos utilizar o comando `docker images`.
 
-### Comandos Rápido
+### Outros Comandos
 - `docker images`: Lista as imagens instaladas na máquina
 - `docker ps`: Lista os containers ativos
 - `docker ps -a`: Lista todos os containers
@@ -66,6 +66,7 @@ Com o cmando acima, criamos uma nova imagem à partir do que está em webserver,
 - `docker rm _nome_ou_id_do_container_`: Exclui o container
 - `docker rm -f _nome_ou_id_do_container_`: Pausa o container caso o mesmo esteja ativo e o excluí
 - `docker rmi _nome_ou_id_da_imagem_`: Exclui a imagem 
+- `docker logs _nome_ou_id_da_imagem_`: Exibe os logs do container
 
 ## Informações
 É importante lembrar que o Docker irá apenas reunir os principais recursos para que o Container funcione. Por isso, muitos recursos que estamos habituados não estarão presentes no container padrão do docker, a não ser que a imagem especificamente tenha incluído isso.
