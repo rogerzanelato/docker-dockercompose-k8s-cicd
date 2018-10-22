@@ -92,4 +92,4 @@ docker build -t rogerzanelato/nginx .
 Obs: O `.` no final diz para o Docker procurar o arquivo dockerfile neste diretório.
 
 ### Flags
-- `-t`: Nome da imagem. Ex: rogerzanelato/nginx.
+- `-t`: Nome da imagem. Ex: rogerzanelato/nginx. 
