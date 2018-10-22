@@ -14,7 +14,7 @@ RUN ln -sf /dev/stderr /var/log/nginx/error.log
 
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 
-# Expõe a porta 8080 para escutar requisições de fora
+# Expõe a porta 8080 para escutar requisições de fora 
 EXPOSE 8080
 
 CMD service nginx start -g
