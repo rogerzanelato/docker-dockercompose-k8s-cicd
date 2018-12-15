@@ -1,0 +1,30 @@
+version: '3'
+services:
+    mongodb:
+      image: mongo:latest
+      container_name: mongodb
+      restart: always
+      volumes:
+          - .docker/data/mongo:/data/db
+      environment:
+        MONGO_INITDB_ROOT_USERNAME: root
+        MONGO_INITDB_ROOT_PASSWORD: 1234
+
+    php:
+        build: .docker/php_apache
+        container_name: phpapache
+        ports:
+          - 82:80
+        volumes:
+          - ./application/:/var/www/html
+        environment:
+          - maildev_host=bdt_maildev
+        depends_on:
+          - maildev
+          - mongodb
+
+    maildev:
+        image: djfarrelly/maildev
+        container_name: maildev
+        ports:
+          - 8001:80
