@@ -1,0 +1,60 @@
+FROM php:7.1-apache
+
+EXPOSE 9000
+
+RUN apt-get update && \
+    apt-get install -y libpq-dev \
+    libpng-dev \
+    zip unzip \
+    git \
+    libzip-dev \ 
+    gnupg2 && \
+    docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql && \
+    docker-php-ext-install pdo pdo_pgsql pgsql && \
+    docker-php-ext-configure zip --with-libzip && \ 
+    docker-php-ext-install zip && \
+    docker-php-ext-install gd 
+
+# Microsoft SQL Server
+# https://laravel-news.com/install-microsoft-sql-drivers-php-7-docker
+# https://blogs.msdn.microsoft.com/brian_swan/2010/03/08/mssql-vs-sqlsrv-whats-the-difference-part-1/
+ENV ACCEPT_EULA=Y
+
+#  Pre-requisites
+RUN apt-get update \
+    && curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
+    && curl https://packages.microsoft.com/config/debian/9/prod.list \
+        > /etc/apt/sources.list.d/mssql-release.list \
+    && apt-get install -y --no-install-recommends \
+        locales \
+        apt-transport-https \
+    && echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
+    && locale-gen \
+    && apt-get update \
+    && apt-get -y --no-install-recommends install \
+        unixodbc-dev \
+        msodbcsql17
+
+# SQL Server PECL && XDebug
+RUN apt-get update \
+    && pecl install xdebug-2.6.1 sqlsrv pdo_sqlsrv \
+    && docker-php-ext-enable sqlsrv pdo_sqlsrv xdebug
+
+# Soap
+RUN apt-get install -y libxml2-dev && \
+    docker-php-ext-install soap
+
+# Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+RUN a2enmod rewrite
+
+# Default XDebug configuration
+COPY xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
+RUN apt-get -y install libmagickwand-dev --no-install-recommends && \
+    pecl install imagick && \
+    docker-php-ext-enable imagick
+
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-enabled/*.conf
