@@ -1,5 +1,8 @@
 # Docker and Kubernetes: The Complete Guide
 
+Link: https://github.com/StephenGrider/DockerCasts
+Curso: https://www.udemy.com/course/docker-and-kubernetes-the-complete-guide
+
 - Imagem: Arquivo único contendo todas as dependências e configurações necessárias para executar um programa.
 - Container: Instância de uma imagem
 - Docker client (CLI): Ferramenta para enviar comandos ao Docker Server

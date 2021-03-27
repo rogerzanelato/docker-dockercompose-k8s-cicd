@@ -40,7 +40,7 @@ volumes:
     db_data:
 ```
 
-**Observação: ** O Docker-compose trabalha com indentação, é importante que as tags estejam corretamente alinhadas.
+**Observação: ** Arquivos yml trabalham com indentação, é importante que as tags estejam corretamente alinhadas.
 
 - `version`: Versão do arquivo
 - `services`: Containers que serão criados
@@ -53,8 +53,10 @@ volumes:
 - `ports`: Mapeamento das portas
 
 
-## Executar arquivo yml
+## Executar
 Para criar os containers, devemos abrir o terminal em uma pasta contendo o arquivo yml, utilizar o utilitário `docker-compose` com os comandos `up` e/ou `down`.
 ```shell
 docker-compose up -d
 ```
+
+## Network
