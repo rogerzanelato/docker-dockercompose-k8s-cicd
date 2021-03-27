@@ -5,6 +5,7 @@ WORKDIR '/app'
 COPY package.json .
 RUN npm install
 
-COPY . .
+# Essa linha não é necessária pois estamos mapeando nossa pasta local para o container
+# COPY . .
 
 CMD ["npm", "run", "start"]
