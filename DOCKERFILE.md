@@ -6,6 +6,16 @@ Resumo e lembretes sobre como criar arquivos dockerfile.
 - Copy e ADD: https://medium.freecodecamp.org/dockerfile-copy-vs-add-key-differences-and-best-practices-9570c4592e9e
 - Boas Práticas: https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
 
+## Dica Importante!
+
+Os steps do Dockerfile são cacheados pelo Docker na hora de gerar uma imagem, isso significa que ao gerarmos duas imagens com steps similares, a segunda utilizará o cache ao invés de efetuar a instalação novamente, tornando alterações em Dockerfile bem rápidas de serem executadas.
+
+Exemplo: Supondo que nosso Dockerfile tenha o `RUN apt-get-install -y nginx` em um dos steps, e buildemos a imagem duas vezes `docker build -t rogerzanelato/docker-teste:v1 .` e `docker build -t rogerzanelato/docker-teste:v2`, a v2 será buildada extremamente rápido, devido ao reaproveitamento do cache.
+
+Contudo, há um ponto importante de se lembrar, sempre que uma alteração é feita no Dockerfile, o Docker irá reaproveitar o cache presente **até o ponto exato alterado**. Isso significa que dali pra baixo o cache será inválidado, todos os steps serão reexecutados. Portanto, sempre coloque no Dockerfile os steps mais estáticos na parte superior (ex: instalação da infraestrutura), e deixe os steps que serão mais comumemente alterados (ex: código fonte), na parte inferior.
+
+
+
 ## Comandos
 
 ### FROM
@@ -92,4 +102,4 @@ docker build -t rogerzanelato/nginx .
 Obs: O `.` no final diz para o Docker procurar o arquivo dockerfile neste diretório.
 
 ### Flags
-- `-t`: Nome da imagem. Ex: rogerzanelato/nginx.
+- `-t`: Tag da imagem. Ex: rogerzanelato/nginx.
