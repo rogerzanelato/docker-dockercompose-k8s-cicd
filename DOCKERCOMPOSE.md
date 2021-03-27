@@ -60,3 +60,28 @@ docker-compose up -d
 ```
 
 ## Network
+
+Por padrão, cada container docker é executado de forma completamente isolada e em sua própria network, isso significa que embora eles consigam se comunicar com o ambiente externo (ex: google.com.br), eles conseguem comunicar entre si ou com a máquina host por default.
+
+Para que os container possam se conectar, é necessário criar uma network e conectá-los.
+
+Embora isso possa ser feito manualmente pela cli do Docker, o docker-compose também efetua esse procedimento automáticamente para nós.
+
+## Rebuildar imagem
+
+Para que o docker-compose rebuilde a imagem ao invés de utilizar o cache, devemos passar a flag `--build`
+
+Ex:
+```shell
+docker-compose up -d --build
+```
+
+Contudo, é importante lembra que o --build irá apenas rebuildar a imagem **sem fazer o pull** para verificar se houve atualizações na imagem, o que ocorre principalmente quando estamos utilizando a tag `latest` da imagem.
+
+Para que a imagem seja atualizada, é necessário executá-lo explícitamente:
+```shell
+docker-compose pull
+
+# ou efetuar os dois juntos
+docker-compose pull && docker-compose up
+```
