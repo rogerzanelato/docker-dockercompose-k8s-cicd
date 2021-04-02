@@ -16,6 +16,35 @@ docker-compose up
 
 Infelizmente não irá executar os testes automáticamente, quando uma alteração for efetuada.
 
+## Executando em produção
+
+O arquivo `Dockerfile` é utilizado para executar o sistema com as configurações de produção. Para isso, é quebrado o processo com uma técnica de `multistage build` (perceba os dois FROM no arquivo), o motivo disso é que precisamos do node e outras dependências apenas durante o processo de desenvolvimento, para o sistema executar em produção, tudo que ele precisa é um arquivo `.html` e `.js`, portanto, não faz sentido subirmos para produção uma imagem com dependências desnecessárias.
+
+Utilizando o `multistage build` podemos puxar temporariamente uma imagem do node, efetuar o processo de compilação da aplicação, e gerar a imagem de produção apenas com o que realmente queremos: os arquivos gerados pelo build, e o servidor `nginx` para servi-lo.
+
+Perceba que para servir o sistema em produção, utilizamos o `nginx` como Webserver da aplicação. O servidor node utilizado na imagem dev é apenas para fins de desenvolvimento.
+
+Para execução:
+
+```shell
+docker build -t rogerzanelato/react-app  .
+docker run -p 8085:80 rogerzanelato/react-app
+```
+
+## Travis CI
+
+Os steps definidos no yml de configuração do travis esperam que os comandos retornem um status code com o resultado, lembrando das regras de error code do Linux (0 sucesso / 1-255 erro).
+
+Ao executar os testes como normalmente fazemos não há status codes retornados, e a execução fica pausada esperando novos comandos. Para que seja retornado o resultado, precisamos passar as flags `-- --coverage` assim será retornando 0 quando nenhum teste quebrar, um error code caso quebre.
+
+## Deployment AWS
+
+Antigamente o Elastic Beanstalk dava preferência à procurar um `Dockerfile` na raiz do projeto para efetuar deploy da aplicação. Porém, hoje a AWS possuí suporte completo à `docker-compose` e portanto ele primeiro procura um `docker-compose` na raíz do projeto, para em sequência procuar por um `Dockerfile`.
+
+Para que não tenhamos problema com isso (em vista que nosso docker-compose é para desenvolvimento local), ao selecionar o ambiente de execução na AWS, precisamos marcar a opção: **Docker running on 64bit Amazon Linux**
+
+No lugar da "Docker running on 64bit Amazon Linux 2".
+
 ## Disclaimers
 
 1. 
@@ -32,4 +61,3 @@ A seguinte linha foi necessária para o autoreload do container funcionar:
 
 3.
 A linha `COPY . .` não é necessária no `Dockerfile.dev` porque estamos fazendo o mapeamento da pasta local para o container. O professor do curso prefere deixar a linha lá, mesmo que não tenha uso, como referência.
-

@@ -47,7 +47,14 @@ volumes:
 - `db/wordpress`: Nome dos containers
 - `image`: Docker image
 - `volumes`: Mapeamento do volume
-- `restart`: Caso algum problema ocorra, o container seja sempre reiniciado
+- `restart`: Indica quando queremos que o container seja reiniciado:
+  - `"no"`: Default, não reinicia o container em nenhuma circunstância.
+  - `always`: Tentar reiniciar o container sempre que ele parar, independente do motivo.
+    - Queremos utilizar o always em containers que nunca devem parar, como um webserver
+  - `unless-stopped`: Igual o `always` porém, ao reiniciarmos o computador, os containers `always` serão reativados quando o docker estiver em execução, enquanto os containers `unless-stopped` permanecerão desativados ([segundo aqui](https://www.reddit.com/r/docker/comments/7iqkk0/what_is_the_purpose_of_restart_always_when_i_just/), não testei).
+  - `on-failure`: Reinicia o container apenas se o container foi parado devido à um error code.
+    - No Linux o processo é sempre encerrado com um código de resultado da operação, 0 significa que foi bem sucedido e nesse caso, não iria ser reiniciado. Códigos 1-255 indicam um erro, e seriam reiniciado.
+    - Queremos utilizar esse formato de `restart` para containers que são levantados para cumprir uma tarefa única e finalizados no fim, ex: importação de dados, leitura de um arquivo csv, pdf, etc...
 - `environment`: Variáveis de ambiente que serão criadas no container
 - `depends_on`: Indica que o container depende de outro para estar ativo
 - `ports`: Mapeamento das portas

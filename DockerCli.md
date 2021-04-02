@@ -31,6 +31,7 @@ docker run nginx
 - `--expose`: Expõe uma porta do container. Ex: --expose=9000.
 - `--volumes-from`: Mapeamos o volume de um outro container neste que estamos criando. Ex: --volumes-from webserver06.
 - `--link`: Estabelecemos um link entre um ou mais container, indicando para isso, o nome do container e a imagem do mesmo. Ex: --link dbserver:mysql.
+- `--restart`: Indica a policy de restart para o container
 
 Observação: Em produção trabalhamos sempre com o conceito de expor o conteúdo dentro do container através da exposição de alguma porta.
 
@@ -54,7 +55,7 @@ Ex:
 docker commit webserver nginxdefault:v1
 ```
 
-Com o cmando acima, criamos uma nova imagem à partir do que está em webserver, chamada de nginxdefault, com a tag v1. Para visualizar, podemos utilizar o comando `docker images`.
+Com o comando acima, criamos uma nova imagem à partir do que está em webserver, chamada de nginxdefault, com a tag v1. Para visualizar, podemos utilizar o comando `docker images`.
 
 ### Outros Comandos
 - `docker images`: Lista as imagens instaladas na máquina
@@ -67,11 +68,6 @@ Com o cmando acima, criamos uma nova imagem à partir do que está em webserver,
 - `docker rm -f _nome_ou_id_do_container_`: Pausa o container caso o mesmo esteja ativo e o excluí
 - `docker rmi _nome_ou_id_da_imagem_`: Exclui a imagem 
 - `docker logs _nome_ou_id_da_imagem_`: Exibe os logs do container
-
-## Informações
-É importante lembrar que o Docker irá apenas reunir os principais recursos para que o Container funcione. Por isso, muitos recursos que estamos habituados não estarão presentes no container padrão do docker, a não ser que a imagem especificamente tenha incluído isso.
-Por isso, é interessante que criemos ambientes por meio de dockerfiles que se adequem às nossas necessidades ou que criemos uma novo imagem à partir de um container configurado.
-**Containers são temporários.** Ao apagar um container, todos os dados inseridos nele serão apagados. Para que isso não ocorra, devemos mapear os volumes para que os sistemas sejam armazenados no host e apenas a infraestrutura esteja armazenada no container.
 
 ## Docker Stop vs Kill
 
