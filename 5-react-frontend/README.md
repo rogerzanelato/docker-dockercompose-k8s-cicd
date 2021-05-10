@@ -1,4 +1,4 @@
-Esse exemplo contempla como seria a configuração de uma imagem docker em React para desenvolvimento e produção.
+Esse exemplo contempla como seria a configuração de uma aplicação com imagem docker em React para desenvolvimento e produção, com CI/CD no Travis e deployment para o ElasticBeanstalk na AWS.
 
 Quando em desenvolvimento, queremos que atualizações no código fonte, atualizem automáticamente a aplicação (como seria se estivéssemos executando o npm start no local), para isso acontecer, precisamos "linkar" o código fonte do nosso computador com o container, através da flag `-v` de volume.
 
@@ -35,7 +35,11 @@ docker run -p 8085:80 rogerzanelato/react-app
 
 Os steps definidos no yml de configuração do travis esperam que os comandos retornem um status code com o resultado, lembrando das regras de error code do Linux (0 sucesso / 1-255 erro).
 
-Ao executar os testes como normalmente fazemos não há status codes retornados, e a execução fica pausada esperando novos comandos. Para que seja retornado o resultado, precisamos passar as flags `-- --coverage` assim será retornando 0 quando nenhum teste quebrar, um error code caso quebre.
+Ao executar os testes como normalmente fazemos não há status codes retornados, e a execução fica pausada esperando novos comandos. Para que seja retornado o resultado, precisamos passar as flags `-- --coverage` para gerar o coverage, acompanhado da varávelmente de ambiente `-e CI=true`, assim será retornando 0 quando nenhum teste quebrar, e um error code caso quebre.
+
+```shell
+docker run -e CI=true rogerzanelato/docker-react npm run test -- --coverage
+```
 
 ## Deployment AWS
 
@@ -44,6 +48,12 @@ Antigamente o Elastic Beanstalk dava preferência à procurar um `Dockerfile` na
 Para que não tenhamos problema com isso (em vista que nosso docker-compose é para desenvolvimento local), ao selecionar o ambiente de execução na AWS, precisamos marcar a opção: **Docker running on 64bit Amazon Linux**
 
 No lugar da "Docker running on 64bit Amazon Linux 2".
+
+Para que o CD funcione, é necessário criar um usuário IAM com a permissão AdministratorAccess-AWSElasticBeanstalk, gerar uma chave de acesso, e configurá-las nas seguintes variáveis de ambeinte no Travis:
+- AWS_ACCESS_KEY
+- AWS_SECRET_KEY
+
+Obs: Esse modelo de implantar aplicação em produção não é recomendável, pois dependemos da AWS gerar a imagem do nosso Dockerfile e executá-la, dificultando a possibilidade de migrar de cloud, e processamento desnecessário. Uma forma mais recomendada, seria gerar a imagem pelo CI, publicá-la no docker.hub (ou outro lugar), e deixar para a cloud apenas fazer pull da imagem, e executar a aplicação (conforme feito no repositório fib-multiplos-container-aws-travis).
 
 ## Disclaimers
 
@@ -58,6 +68,3 @@ Serve para "favoritar" a pasta `node_modules` dentro do container de forma que e
 A seguinte linha foi necessária para o autoreload do container funcionar:
     environment:
       - CHOKIDAR_USEPOLLING=true
-
-3.
-A linha `COPY . .` não é necessária no `Dockerfile.dev` porque estamos fazendo o mapeamento da pasta local para o container. O professor do curso prefere deixar a linha lá, mesmo que não tenha uso, como referência.

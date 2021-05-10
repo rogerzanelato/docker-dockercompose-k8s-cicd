@@ -1,0 +1,35 @@
+language: generic
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t rogerzanelato/fib-multiplos-container-client-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true rogerzanelato/fib-multiplos-container-client-test npm test -- --coverage
+
+after_success:
+  - docker build -t rogerzanelato/fib-multiplos-container-client ./client
+  - docker build -t rogerzanelato/fib-multiplos-container-nginx ./nginx
+  - docker build -t rogerzanelato/fib-multiplos-container-server ./server
+  - docker build -t rogerzanelato/fib-multiplos-container-worker ./worker
+  # Login docker hub
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Publicar imagens no docker hub
+  - docker push rogerzanelato/fib-multiplos-container-client
+  - docker push rogerzanelato/fib-multiplos-container-nginx
+  - docker push rogerzanelato/fib-multiplos-container-server
+  - docker push rogerzanelato/fib-multiplos-container-worker
+
+deploy:
+  provider: elasticbeanstalk
+  region: us-east-2
+  app: fib-multiplos-container-aws-travis
+  env: Fibmultiploscontainerawstravis-env
+  bucket_name: elasticbeanstalk-us-east-2-849087879460
+  bucket_path: fib-multiplos-container-aws-travis
+  on:
+    branch: main
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY

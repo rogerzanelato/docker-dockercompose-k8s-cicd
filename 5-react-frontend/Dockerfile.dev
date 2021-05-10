@@ -5,7 +5,8 @@ WORKDIR '/app'
 COPY package.json .
 RUN npm install
 
-# Essa linha não é necessária pois estamos mapeando nossa pasta local para o container
-# COPY . .
+# Essa linha não é necessária para desenvolvimento local pois estamos mapeando nossa pasta local para o container
+# Porém precisamos dela para reaproveitar essa mesma imagem no CI
+COPY . .
 
 CMD ["npm", "run", "start"]
