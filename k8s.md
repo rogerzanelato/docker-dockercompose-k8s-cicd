@@ -54,6 +54,15 @@ Como vimos acima, o K8S é uma ferramenta para gerenciar containers, enquanto o 
 Utilizamos o cli `kubectl` para gerenciar nosso cluster.
 
 - `kubectl cluster-info`: Retorna as informações do cluster.
+- `kubectl apply -f minha-config.yaml`: Injeta uma configuração no K8S para que algo seja criado (pod, serviço, replica, etc...)
+- `kubectl get pods`: Lista os pods no cluster
+  - Coluna `READY`:  Indica quantos pod estão prontos de quantos precisamos, ex: 0/1, 1/1, 1/2... 
+  - Coluna `STATUS`: Indica o status do pod
+- `kubectl get services`: Lista os services no cluster
+- `kubectl get all`: Lista todos os tipos de objetos no cluster
+- `kubectl describe pod nome-do-meu-pod`: Lista informações sobre o pod, como por exemplo, a imagem de container que ele está usando
+- `kubectl describe service nome-da-minha-service`: Lista informações sobre a service
+- `kubectl diff -f minha-config.yaml`: Faz um diff entre a configuração atualmente existente no cluster e a atual para esse objeto, permitindo que tenhamos uma "prévia" do que mudou e do que será feito caso apliquemos esse arquivo.
 
 ## Configurações
 
@@ -150,11 +159,15 @@ metadata:
 
 O nome `component` é arbitrário, poderíamos por exemplo chamá-lo de `tier` ou qualquer outra coisa, mas teríamos que mudar nos dois yaml.
 
-## Comandos CLI
+## Imperative vs Declarative deployments
 
-- `kubectl apply -f MINHA_CONFIG.yaml`: Injeta uma configuração no K8S para que algo seja criado (pod, serviço, replica, etc...)
-- `kubectl get pods`: Lista os pods no cluster
-  - Coluna `READY`:  Indica quantos pod estão prontos de quantos precisamos, ex: 0/1, 1/1, 1/2... 
-  - Coluna `STATUS`: Indica o status do pod
-- `kubectl get services`: Lista os services no cluster
-- `kubectl get all`: Lista todos os tipos de objetos no cluster
+![](https://i.imgur.com/q3pz88m.png)
+
+Básicamente quando falamos de deploy **Imperativo**, estamos falando de realizar uma série de análise e instruções "manuais" para que nosso cluster chegue no estado desejado através de comandos cli. O deploy **Declarativo** por sua vez é muito mais simples, não precisamos analisar o estado atual do nosso cluster nem efetuar operações diretamente, tudo que iremos fazer é alterar um arquivo de configuração, dizendo qual o estado que desejamos, e o próprio k8s irá ser responsável em fazer o que for necessário, da melhor forma possível, para que o cluster chegue nesse estado ideal.
+
+É importante ressaltar essa diferença, pois o k8s nos permite trabalhar com os dois formatos, mas por razões óbvias, em qualquer carga de trabalho profissional queremos sempre seguir com o formato **Declarativo**, portanto quando lermos blogs, respostas, ou recebermos de ajuda, devemos ter cuidado com instruções do tipo "rode no terminal o comando A/B/C", pois podemos estar fazendo algo no formato mais difícil.
+
+Num fluxo profissional, iremos alterar o estado do k8s aplicando uma configuração atualizada (`kubectl apply -f minha-config.yaml`), e então deixaremos à cargo do k8s converter o cluster para esse estado.
+
+**Observação:**
+Jamais devemos mexer em um nó ou pod diretamente (por exemplo, atraves de comandos usando o cli do docker). Como administradores de um cluster k8s, devemos sempre efetuar operações através da cli `kubectl`, e por fim, quem será responsável por gerenciar os nós da melhor forma possível, deverá ser **sempre o k8s**.

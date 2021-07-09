@@ -1,6 +1,6 @@
 Front-end da aplicação fibonacci-multi-containers.
 
-Comandos:
+**Comandos:**
 ```bash
 # Cria os containers
 kubectl apply -f client-pod.yaml
@@ -22,7 +22,7 @@ kubectl get services
 kubectl get all
 ```
 
-Ex:
+Retorno:
 ```bash
 $ kubectl get all
 NAME             READY   STATUS    RESTARTS   AGE
@@ -31,3 +31,10 @@ pod/client-pod   1/1     Running   2          11m
 NAME                       TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
 service/client-node-port   NodePort    10.100.207.137   <none>        3050:31515/TCP   11m
 service/kubernetes         ClusterIP   10.96.0.1        <none>        443/TCP          24d
+```
+
+# Diagrama do exemplo
+
+![](https://i.imgur.com/Sf0NA0i.png)
+
+Obs: Ignorar o Minikube
